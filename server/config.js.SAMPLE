@@ -1,0 +1,13 @@
+//Make copy of this file and rename it to config.js
+
+module.exports = {
+
+    'secret': '[SECRET]',
+    'db_conn': {
+    	host     : '[ADRES]',
+		user     : '[USER]',
+		password : '[PASS]',
+		database : '[DATABASE]',
+		port	 : [PORT]
+    }
+};

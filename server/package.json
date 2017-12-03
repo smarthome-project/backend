@@ -1,0 +1,26 @@
+{
+  "name": "medi_calendar-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Lisrec && Mahizz",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "body-parser": "^1.15.2",
+    "ejs": "^2.5.2",
+    "express": "^4.14.0",
+    "jsonwebtoken": "^7.1.9",
+    "lodash": "^4.17.4",
+    "morgan": "^1.7.0",
+    "mysql": "^2.12.0",
+    "mysql2": "^1.5.1",
+    "python-shell": "^0.4.0",
+    "q": "^1.4.1",
+    "sequelize": "^4.23.1",
+    "serialport": "^4.0.7"
+  }
+}
