@@ -2,14 +2,14 @@
 
 module.exports = {
 
-    'secret': 'jn097aoifsno5675gnapn244454',
-    'port': 3300,
+    'secret': '675gna445jn0597aoipn24fsno4',
+    'port': 3376,
     'db_conn': {
     	host     : '127.0.0.1',
-		user     : 'SmartHome',
+		user     : 'smarthome',
 		password : 'smarthome',
-		database : 'SmartHome',
-		port	 : 3306,
+		database : 'smarthome',
+		port	 : 8889,
 		multipleStatements: true
     }
 };
