@@ -4,6 +4,7 @@ const conf    = require('../config.js').db_conn
 
 const sequelize = new Sequelize(conf.database, conf.user, conf.password, {
   host: conf.host,
+  port: conf.port,
   dialect: 'mysql',
   pool: {
     max: 5,
