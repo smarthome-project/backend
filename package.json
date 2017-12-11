@@ -1,5 +1,5 @@
 {
-  "name": "medi_calendar-server",
+  "name": "smarthome-server",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -21,6 +21,7 @@
     "python-shell": "^0.4.0",
     "q": "^1.4.1",
     "sequelize": "^4.23.1",
-    "serialport": "^4.0.7"
+    "serialport": "^4.0.7",
+    "socket.io": "^2.0.4"
   }
 }
