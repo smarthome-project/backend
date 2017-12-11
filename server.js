@@ -19,7 +19,8 @@ const schedulesRouter = require('./routes/schedules')
 //var route = require('./routes/route')
 var app = express()
 
-var _port = 3300
+var server  = require('http').createServer(app);
+var io      = require('socket.io').listen(server);
 
 app.set('superSecret', config.secret)
 
@@ -37,7 +38,6 @@ app.use(function(req, res, next) {
 		next()
 	}
 })
-
 
 app.use("/api/tokens", tokensRouter)
 app.use("/api/users", usersRouter)
@@ -64,6 +64,15 @@ app.get("/api/alarm/:state", (req, res) => {
 
 
 
+io.on('connection',function(socket) {
+	console.log("connection")
+	socket.on('changeState', (data) => {
+		console.log(data)
+	})
+})
+
+
+
 app.use(function(req, res, next) {
 	var token = req.body.token || req.query.token || req.headers['x-access-token']
 	if (token) {
@@ -87,8 +96,10 @@ app.get('*', function(req, res){
 	res.send('server')
 })
 
-app.listen(config.port, function(){
+server.listen(config.port, function(){
 	console.log('Server started on ',config.port)
 	checkDB.updateDB()
 })
+
+
 
