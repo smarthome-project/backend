@@ -47,6 +47,23 @@ app.use("/api/devices", devicesRouter)
 app.use("/api/inputs", inputsRouter)
 app.use("/api/schedules", schedulesRouter)
 
+/*=======================================
+=            Code For alarm (mock)            =
+=======================================*/
+let alarmStatus = false
+
+app.get("/api/alarm", (req, res) => {
+	res.status(200).json({alarmStatus: alarmStatus})
+})
+
+app.get("/api/alarm/:state", (req, res) => {
+	alarmStatus = (req.params.state == "true") ? true : false
+	res.status(200).json({alarmStatus: alarmStatus})
+})
+/*=====  End of Code For alarm (mock)  ======*/
+
+
+
 app.use(function(req, res, next) {
 	var token = req.body.token || req.query.token || req.headers['x-access-token']
 	if (token) {

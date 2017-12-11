@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `pin_settings` (
 
 CREATE TABLE IF NOT EXISTS `inputs` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  'pin_settings_id' int(11) UNSIGNED NOT NULL, 
+  `pin_settings_id` int(11) UNSIGNED NOT NULL, 
   `number` int(11) UNSIGNED NOT NUll,
   `type` varchar(60) NOT NULL,
   PRIMARY KEY (`id`)
