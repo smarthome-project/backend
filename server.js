@@ -16,6 +16,8 @@ const roomsRouter = require('./routes/rooms')
 const inputsRouter = require('./routes/inputs')
 const pinSettingsRouter = require('./routes/pinSettings')
 const schedulesRouter = require('./routes/schedules')
+
+const sequ = require('./libs/sequelizeDB.js')
 //var route = require('./routes/route')
 var app = express()
 
@@ -62,12 +64,36 @@ app.get("/api/alarm/:state", (req, res) => {
 })
 /*=====  End of Code For alarm (mock)  ======*/
 
-
+app.set('socketio', io)
 
 io.on('connection',function(socket) {
 	console.log("connection")
-	socket.on('changeState', (data) => {
+	console.log(socket.handshake.query.Type)
+
+	if (socket.handshake.query.Type && socket.handshake.query.Type == 'controler') {
+		socket.join('controler')
+	} else {
+		socket.join('user')
+	}
+
+	socket.on('noPort', (data) => {
 		console.log(data)
+	})
+
+	socket.on('getDevices', () => {
+		sequ.sequelize.query(
+		`SELECT d.state, d.type, i.*, pin.pin_plus, pin.pin_minus, pin.pin_data_one, pin.pin_data_two, pin.shift_id FROM \`devices\` d 
+			LEFT JOIN \`inputs\` i ON(d.input_id = i.id)
+	    	LEFT JOIN \`pin_settings\` pin ON(i.number = pin.id);`,
+	    { type: sequ.sequelize.QueryTypes.SELECT})
+		.then(devices => {
+			let devicesByInputID = {}
+			devices.forEach( (device) => {
+				nr = device.id
+				devicesByInputID[nr] = device
+			})
+			io.to('controler').emit("allDevicesData", devicesByInputID)
+		})
 	})
 })
 

@@ -23,6 +23,10 @@ var updateDB = function() {
 					updateToVersion('version_0.3.sql', (err, resp) => {
 						if(!err) updateDB()
 					})
+				}  else if(resp == '0.3') {
+					updateToVersion('version_0.4.sql', (err, resp) => {
+						if(!err) updateDB()
+					})
 				} else {
 					console.log("DB version = " + resp)
 				}
