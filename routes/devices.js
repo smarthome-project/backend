@@ -11,11 +11,8 @@ const Schedules = require('../models/schedules.js')(sequ.sequelize ,sequ.Sequeli
 ===========================*/
 
 router.get('/', (req, res, next) => {
-	Devices.findAll({
-		attributes: {
-			exclude: ['password']
-		}
-	})
+	req.app.get('socketio').to('controler').emit("testInit")
+	Devices.findAll()
 		.then(devices => {
 			res.status(200).json(devices)
 		})
@@ -27,6 +24,8 @@ router.get('/', (req, res, next) => {
 
 router.get('/:id', (req, res, next) => {
 	const id = req.params.id
+	console.log("emiting")
+	req.app.get('socketio').to('controler').emit("getDeviceStatus", id)
 	Devices.findById(id)
 		.then(device => {
 			if (device) {
@@ -49,9 +48,7 @@ router.post('/', (req, res, next) => {
 	console.log(data)
 	Devices.create(data)
 		.then(device => {
-			delete device.dataValues.pass
-
-			initDevice(device.input_id)
+			initDevice(device.input_id, req.app.get('socketio'))
 			res.status(201).json(device)
 		})
 		.catch(e => {
@@ -126,7 +123,7 @@ router.delete('/:id', (req, res, next) => {
 		})
 })
 
-function initDevice(input_id) {
+function initDevice(input_id, io) {
 	sequ.sequelize.query(
 	`SELECT d.state, d.type, i.*, pin.pin_plus, pin.pin_minus, pin.pin_data_one, pin.pin_data_two, pin.shift_id FROM \`devices\` d 
 		LEFT JOIN \`inputs\` i ON(d.input_id = i.id)

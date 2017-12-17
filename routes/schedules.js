@@ -45,11 +45,10 @@ router.get('/:id', (req, res, next) => {
 
 router.post('/', (req, res, next) => {
 	let data = req.body
-	console.log(data)
 	Schedules.create(data)
 		.then(schedule => {
-			delete schedule.dataValues.pass
 			res.status(201).json(schedule)
+			req.app.get('scheduler').addJob(cron.id, cron.cron,cron.inputId , cron.state, cron.transiton_time)
 		})
 		.catch(e => {
 			console.log(e)
@@ -69,8 +68,8 @@ router.put('/:id', (req, res, next) => {
 			if (schedule) {
 				schedule.update(data)
 				.then((s) => {
-					console.log(s)
-					res.status(200).json(schedule)
+					req.app.get('scheduler')
+					res.status(200).json(s)
 				})
 				.catch(e => {
 					res.status(400).json(e.errors)

@@ -1,6 +1,12 @@
 module.exports = (sequelize, Sequelize) => {
 
 	const Inputs = sequelize.define('inputs', {
+		pin_settings_id: {
+			type: Sequelize.INTEGER,
+			unique: true,
+			allowNull: false,
+
+		},
 		number: {
 			type: Sequelize.INTEGER,
 			unique: true,

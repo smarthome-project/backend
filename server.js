@@ -4,6 +4,7 @@ const bodyParser   = require('body-parser')
 const morgan       = require('morgan')
 const jwt		   = require('jsonwebtoken')
 const _ 		   = require('lodash')
+const CronJob      = require('cron').CronJob
 
 const config = require('./config')
 const checkDB 	= require('./libs/updateDB.js')
@@ -18,6 +19,8 @@ const pinSettingsRouter = require('./routes/pinSettings')
 const schedulesRouter = require('./routes/schedules')
 
 const sequ = require('./libs/sequelizeDB.js')
+const Scheduler = require('./libs/Scheduler.js')
+
 //var route = require('./routes/route')
 var app = express()
 
@@ -66,6 +69,10 @@ app.get("/api/alarm/:state", (req, res) => {
 
 app.set('socketio', io)
 
+let scheduler = new Scheduler(CronJob, io, sequ)
+
+app.set('scheduler', scheduler)
+
 io.on('connection',function(socket) {
 	console.log("connection")
 	console.log(socket.handshake.query.Type)
@@ -84,20 +91,18 @@ io.on('connection',function(socket) {
 		sequ.sequelize.query(
 		`SELECT d.state, d.type, i.*, pin.pin_plus, pin.pin_minus, pin.pin_data_one, pin.pin_data_two, pin.shift_id FROM \`devices\` d 
 			LEFT JOIN \`inputs\` i ON(d.input_id = i.id)
-	    	LEFT JOIN \`pin_settings\` pin ON(i.number = pin.id);`,
+	    	LEFT JOIN \`pin_settings\` pin ON(i.pin_settings_id = pin.id);`,
 	    { type: sequ.sequelize.QueryTypes.SELECT})
 		.then(devices => {
 			let devicesByInputID = {}
 			devices.forEach( (device) => {
-				nr = device.id
+				nr = device.pin_settings_id
 				devicesByInputID[nr] = device
 			})
 			io.to('controler').emit("allDevicesData", devicesByInputID)
 		})
 	})
 })
-
-
 
 app.use(function(req, res, next) {
 	var token = req.body.token || req.query.token || req.headers['x-access-token']
@@ -125,7 +130,9 @@ app.get('*', function(req, res){
 server.listen(config.port, function(){
 	console.log('Server started on ',config.port)
 	checkDB.updateDB()
+	scheduler.getJobsFromDb()
 })
+
 
 
 
