@@ -11,6 +11,10 @@ module.exports = (sequelize, Sequelize) => {
 		default: {
 			type: Sequelize.JSON,
 			allowNull: false
+		},
+		pl_name: {
+			type: Sequelize.STRING(30),
+			allowNull: true
 		}
 	}, {
 		timestamps: false

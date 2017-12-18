@@ -12,7 +12,7 @@ const checkDB 	= require('./libs/updateDB.js')
 
 const tokensRouter = require('./routes/tokens')
 const devicesRouter = require('./routes/devices')
-const devicesTypesRouter = require('./routes/devices')
+const devicesTypesRouter = require('./routes/devicesTypes')
 const usersRouter = require('./routes/users')
 const roomsRouter = require('./routes/rooms')
 const inputsRouter = require('./routes/inputs')
