@@ -133,11 +133,6 @@ function addSchedule(id, Schedules) {
 
 }
 
-function changeSchedule(id, Schedules) {
-
-	
-}
-
 function removeSchedule(id, Schedules) {
 	Schedules.removeJob(id)
 }
