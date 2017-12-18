@@ -1,4 +1,4 @@
-CREATE TABLE `pin_settings` (
+CREATE TABLE IF NOT EXISTS `pin_settings` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `type` varchar(60) NOT NULL,
   `pin1` int(11) unsigned DEFAULT NULL,

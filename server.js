@@ -12,6 +12,7 @@ const checkDB 	= require('./libs/updateDB.js')
 
 const tokensRouter = require('./routes/tokens')
 const devicesRouter = require('./routes/devices')
+const devicesTypesRouter = require('./routes/devices')
 const usersRouter = require('./routes/users')
 const roomsRouter = require('./routes/rooms')
 const inputsRouter = require('./routes/inputs')
@@ -27,6 +28,7 @@ var app = express()
 
 var server  = require('http').createServer(app);
 var io      = require('socket.io').listen(server);
+let alarmStatus = false
 
 app.set('superSecret', config.secret)
 
@@ -50,6 +52,7 @@ app.use("/api/users", usersRouter)
 app.use("/api/rooms", roomsRouter)
 app.use("/api/pinSettings", pinSettingsRouter)
 app.use("/api/devices", devicesRouter)
+app.use("/api/devicesTypes", devicesTypesRouter)
 app.use("/api/inputs", inputsRouter)
 app.use("/api/images", imagesRouter)
 app.use("/api/schedules", schedulesRouter)
@@ -57,7 +60,6 @@ app.use("/api/schedules", schedulesRouter)
 /*=======================================
 =            Code For alarm (mock)            =
 =======================================*/
-let alarmStatus = false
 
 app.get("/api/alarm", (req, res) => {
 	res.status(200).json({alarmStatus: alarmStatus})
@@ -74,8 +76,6 @@ app.set('socketio', io)
 let scheduler = new Scheduler(CronJob, io, sequ)
 
 app.set('scheduler', scheduler)
-
-scheduler.getJobsFromDb()
 
 io.on('connection',function(socket) {
 	console.log("connection")
