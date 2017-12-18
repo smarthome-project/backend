@@ -15,6 +15,7 @@ const devicesRouter = require('./routes/devices')
 const usersRouter = require('./routes/users')
 const roomsRouter = require('./routes/rooms')
 const inputsRouter = require('./routes/inputs')
+const imagesRouter = require('./routes/images')
 const pinSettingsRouter = require('./routes/pinSettings')
 const schedulesRouter = require('./routes/schedules')
 
@@ -50,6 +51,7 @@ app.use("/api/rooms", roomsRouter)
 app.use("/api/pinSettings", pinSettingsRouter)
 app.use("/api/devices", devicesRouter)
 app.use("/api/inputs", inputsRouter)
+app.use("/api/images", imagesRouter)
 app.use("/api/schedules", schedulesRouter)
 
 /*=======================================
