@@ -3,24 +3,16 @@ const router 	   = express.Router()
 const _ 		   = require('lodash')
 
 const sequ = require('../libs/sequelizeDB.js')
-const Rooms = require('../models/rooms.js')(sequ.sequelize ,sequ.Sequelize)
-const Devices = require('../models/devices.js')(sequ.sequelize ,sequ.Sequelize)
-const Schedules = require('../models/schedules.js')(sequ.sequelize ,sequ.Sequelize)
-
-//test
+const Images = require('../models/images.js')(sequ.sequelize ,sequ.Sequelize)
 
 /*===========================
 =            GETs           =
 ===========================*/
 
 router.get('/', (req, res, next) => {
-	Rooms.findAll({
-		attributes: {
-			exclude: ['password']
-		}
-	})
-		.then(rooms => {
-			res.status(200).json(rooms)
+	Images.findAll()
+		.then(images => {
+			res.status(200).json(images)
 		})
 		.catch(e => {
 			res.status(500).json(e)
@@ -30,10 +22,10 @@ router.get('/', (req, res, next) => {
 
 router.get('/:id', (req, res, next) => {
 	const id = req.params.id
-	Rooms.findById(id)
-		.then(room => {
-			if (room) {
-				res.status(200).json(room)
+	Images.findById(id)
+		.then(image => {
+			if (image) {
+				res.status(200).json(image)
 			} else {
 				res.status(400).end()
 			}
@@ -50,10 +42,9 @@ router.get('/:id', (req, res, next) => {
 router.post('/', (req, res, next) => {
 	let data = req.body
 	console.log(data)
-	Rooms.create(data)
-		.then(room => {
-			delete room.dataValues.pass
-			res.status(201).json(room)
+	Images.create(data)
+		.then(image => {
+			res.status(201).json(image)
 		})
 		.catch(e => {
 			console.log(e)
@@ -69,13 +60,13 @@ router.post('/', (req, res, next) => {
 router.put('/:id', (req, res, next) => {
 	const id = req.params.id
 	let data = req.body
-	Rooms.findById(id)
-		.then(room => {
-			if (room) {
-				room.update(data)
+	Images.findById(id)
+		.then(image => {
+			if (image) {
+				image.update(data)
 				.then((s) => {
 					console.log(s)
-					res.status(200).json(room)
+					res.status(200).json(image)
 				})
 				.catch(e => {
 					res.status(400).json(e.errors)
@@ -99,27 +90,15 @@ router.put('/:id', (req, res, next) => {
 
 router.delete('/:id', (req, res, next) => {
 	const id  = req.params.id
-	Rooms.findById(id)
-		.then(room => {
-			if (!room) 
+	Images.findById(id)
+		.then(image => {
+			if (image) {
+				return image.destroy()
+			} else {
 				throw new Error("NO_INSTANCE")
-
-			return sequ.sequelize.transaction( (t) => {
-				return Schedules.destroy({
-					where: { room_id: id }
-				}, {transaction: t})
-					.then( (aff) => {
-						return Devices.destroy({
-							where: { room_id: id }
-						}, {transaction: t})
-					})
-					.then( (aff) => {
-						return room.destroy({},{transaction: t})
-					})
-
-			})
+			}
 		})
-		.then( (aff) => {
+		.then( () => {
 			res.status(204).end()
 		})
 		.catch(e => {
@@ -131,6 +110,8 @@ router.delete('/:id', (req, res, next) => {
 			}
 		})
 })
+
+
 
 module.exports = router
 
