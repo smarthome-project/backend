@@ -127,14 +127,15 @@ app.use(function(req, res, next) {
 	}
 })
 
-app.get('*', function(req, res){
+app.get('*', function(req, res) {
 	res.send('server')
 })
 
-server.listen(config.port, function(){
+server.listen(config.port, function() {
 	console.log('Server started on ',config.port)
-	checkDB.updateDB()
-	scheduler.getJobsFromDb()
+	checkDB.updateDB( () => {
+		scheduler.getJobsFromDb()	
+	})
 })
 
 

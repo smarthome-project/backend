@@ -8,7 +8,7 @@ var sqlFilesDircetory = __dirname + '/sqlScripts/'
 
 let version = 0
 
-var updateDB = function() {
+var updateDB = function(rdy) {
 	checkDbVersion()
 		.then( resp => {			
 			if(resp == version) {
@@ -17,14 +17,15 @@ var updateDB = function() {
 				version = resp
 				if(resp == '0.1') {
 					updateToVersion('version_0.2.sql', (err, resp) => {
-						if(!err) updateDB()
+						if(!err) updateDB(rdy)
 					})
 				}  else if(resp == '0.2') {
 					updateToVersion('version_0.3.sql', (err, resp) => {
-						if(!err) updateDB()
+						if(!err) updateDB(rdy)
 					})
 				} else {
 					console.log("DB version = " + resp)
+					rdy()
 				}
 			}	
 		})
