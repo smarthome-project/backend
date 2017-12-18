@@ -1,12 +1,14 @@
-CREATE TABLE IF NOT EXISTS `pin_settings` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `pin_settings` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `type` varchar(60) NOT NULL,
-  `pin_plus` int(11) UNSIGNED NOT NULL,
-  `pin_minus` int(11) UNSIGNED NOT NULL ,
-  `pin_data_one` int(11) UNSIGNED,
-  `pin_data_two` int(11) UNSIGNED,
+  `pin1` int(11) unsigned DEFAULT NULL,
+  `pin2` int(11) unsigned DEFAULT NULL,
+  `pin3` int(11) unsigned DEFAULT NULL,
+  `pwm` tinyint(1) unsigned DEFAULT '0',
+  `shift_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE IF NOT EXISTS `inputs` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,

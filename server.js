@@ -75,6 +75,8 @@ let scheduler = new Scheduler(CronJob, io, sequ)
 
 app.set('scheduler', scheduler)
 
+scheduler.getJobsFromDb()
+
 io.on('connection',function(socket) {
 	console.log("connection")
 	console.log(socket.handshake.query.Type)
@@ -91,7 +93,7 @@ io.on('connection',function(socket) {
 
 	socket.on('getDevices', () => {
 		sequ.sequelize.query(
-		`SELECT d.state, d.type, i.*, pin.pin_plus, pin.pin_minus, pin.pin_data_one, pin.pin_data_two, pin.shift_id FROM \`devices\` d 
+		`SELECT d.state, d.type, i.*, pin.pin1, pin.pin2, pin.pin3, pin.pwm, pin.shift_id FROM \`devices\` d 
 			LEFT JOIN \`inputs\` i ON(d.input_id = i.id)
 	    	LEFT JOIN \`pin_settings\` pin ON(i.pin_settings_id = pin.id);`,
 	    { type: sequ.sequelize.QueryTypes.SELECT})

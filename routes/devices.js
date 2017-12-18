@@ -11,7 +11,6 @@ const Schedules = require('../models/schedules.js')(sequ.sequelize ,sequ.Sequeli
 ===========================*/
 
 router.get('/', (req, res, next) => {
-	req.app.get('socketio').to('controler').emit("testInit")
 	Devices.findAll()
 		.then(devices => {
 			res.status(200).json(devices)
@@ -125,7 +124,7 @@ router.delete('/:id', (req, res, next) => {
 
 function initDevice(input_id, io) {
 	sequ.sequelize.query(
-	`SELECT d.state, d.type, i.*, pin.pin_plus, pin.pin_minus, pin.pin_data_one, pin.pin_data_two, pin.shift_id FROM \`devices\` d 
+	`SELECT d.state, d.type, i.*, pin.pin1, pin.pin2, pin.pin3, pin.pwm, pin.shift_id FROM \`devices\` d 
 		LEFT JOIN \`inputs\` i ON(d.input_id = i.id)
     	LEFT JOIN \`pin_settings\` pin ON(i.number = pin.id)
     	WHERE d.input_id = ${input_id};`,
@@ -136,9 +135,4 @@ function initDevice(input_id, io) {
 	})
 }
 
-
-
 module.exports = router
-
-
-

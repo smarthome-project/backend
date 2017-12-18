@@ -12,11 +12,7 @@ const Schedules = require('../models/schedules.js')(sequ.sequelize ,sequ.Sequeli
 ===========================*/
 
 router.get('/', (req, res, next) => {
-	Rooms.findAll({
-		attributes: {
-			exclude: ['password']
-		}
-	})
+	Rooms.findAll()
 		.then(rooms => {
 			res.status(200).json(rooms)
 		})

@@ -13,7 +13,7 @@ class Scheduler {
 			LEFT JOIN devices d ON(s.device_id = d.id)
 			LEFT JOIN inputs i ON (d.input_id = i.id)
 			LEFT JOIN pin_settings pin on(i.pin_settings_id = pin.id)
-			WHERE s.active = true AND d.state <> s.state;`,
+			WHERE s.active = true;`,
 	    { type: this.sequ.sequelize.QueryTypes.SELECT})
 		.then(schedules => {
 			schedules.forEach( (cron) => {
@@ -41,11 +41,17 @@ class Scheduler {
 		}
 
 		this.jobs[id] = job
-
+		//console.log(this.jobs[id])
 	}
 
 	removeJob(id) {
-
+		let job = this.jobs[id]
+		if (job) {
+			job.stop()
+			this.jobs[id] = undefined
+		} else {
+			console.log("no Job to remove")
+		}
 	}
 
 }
