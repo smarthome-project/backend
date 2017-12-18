@@ -7,6 +7,8 @@ const Rooms = require('../models/rooms.js')(sequ.sequelize ,sequ.Sequelize)
 const Devices = require('../models/devices.js')(sequ.sequelize ,sequ.Sequelize)
 const Schedules = require('../models/schedules.js')(sequ.sequelize ,sequ.Sequelize)
 
+//test
+
 /*===========================
 =            GETs           =
 ===========================*/
