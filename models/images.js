@@ -2,7 +2,7 @@ module.exports = (sequelize, Sequelize) => {
 
 	const Images = sequelize.define('images', {
 		name: {
-			type: Sequelize.STRING,
+			type: Sequelize.STRING(40),
 			unique: true,
 			allowNull: false,
 		},
@@ -12,7 +12,7 @@ module.exports = (sequelize, Sequelize) => {
 			allowNull: false,
 		},
 		type: {
-			type:Sequelize.STRING(100)
+			type:Sequelize.STRING(30)
 		}
 	}, {
 		timestamps: false
