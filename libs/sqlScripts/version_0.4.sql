@@ -33,7 +33,7 @@ TRUNCATE `devices_types`;
 
 LOCK TABLES `devices_types` WRITE;
 /*!40000 ALTER TABLE `devices_types` DISABLE KEYS */;
-INSERT INTO `devices_types` VALUES (1,'POWER','{\"active\": false}','zasilanie'),(2,'LEDRGB','{\"rgb\": \"#000000\"}','ledy rgb'),(3,'LEDCW','{\"rgb\": \"#000000\"}','ledy ciepłe zimne');
+INSERT INTO `devices_types` VALUES (1,'POWER','{\"active\": false}','zasilanie'),(2,'LEDRGB','{\"rgb\": \"#ffffff\"}','ledy rgb'),(3,'LEDCW','{\"rgb\": \"#ffffff\"}','ledy ciepłe zimne');
 /*!40000 ALTER TABLE `devices_types` ENABLE KEYS */;
 UNLOCK TABLES;
 
