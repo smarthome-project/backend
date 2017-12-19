@@ -48,6 +48,7 @@ router.post('/', (req, res, next) => {
 	Devices.create(data)
 		.then(device => {
 			initDevice(device.input_id, req.app.get('socketio'))
+			req.app.get('socketio').to('user').emit('newDevice'. device)
 			res.status(201).json(device)
 		})
 		.catch(e => {
@@ -70,7 +71,10 @@ router.put('/:id', (req, res, next) => {
 				device.update(data)
 				.then((s) => {
 					console.log(s)
+					if(req.body.time)
+						device.state.time = req.body.time
 					req.app.get('socketio').to('controler').emit('changeState',{id:device.input_id, state:device.state})
+					req.app.get('socketio').to('user').emit('changeState', {id:device.id, state: devices.state})
 					res.status(200).json(device)
 				})
 				.catch(e => {
@@ -110,6 +114,7 @@ router.delete('/:id', (req, res, next) => {
 		})
 		.then( (aff) => {
 			req.app.get('socketio').to('controler').emit('removeDevice', input_id)
+			req.app.get('socketio').to('user').emit('removeDevice'. id)
 			res.status(204).end()
 		})
 		.catch(e => {
@@ -125,8 +130,8 @@ router.delete('/:id', (req, res, next) => {
 function initDevice(input_id, io) {
 	sequ.sequelize.query(
 	`SELECT d.state, d.type, i.*, pin.pin1, pin.pin2, pin.pin3, pin.pwm, pin.shift_id FROM \`devices\` d 
-		LEFT JOIN \`inputs\` i ON(d.input_id = i.id)
-    	LEFT JOIN \`pin_settings\` pin ON(i.number = pin.id)
+		LEFT JOIN \`inputs\` i ON(d.input_id = i.number)
+    	LEFT JOIN \`pin_settings\` pin ON(i.pin_settings_id = pin.id)
     	WHERE d.input_id = ${input_id};`,
     { type: sequ.sequelize.QueryTypes.SELECT})
 	.then(device => {

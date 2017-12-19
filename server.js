@@ -21,8 +21,12 @@ const imagesRouter = require('./routes/images')
 const pinSettingsRouter = require('./routes/pinSettings')
 const schedulesRouter = require('./routes/schedules')
 
+
 const sequ = require('./libs/sequelizeDB.js')
 const Scheduler = require('./libs/Scheduler.js')
+
+const Devices = require('./models/devices.js')(sequ.sequelize ,sequ.Sequelize)
+
 
 //var route = require('./routes/route')
 var app = express()
@@ -76,7 +80,7 @@ app.get("/api/alarm/:state", (req, res) => {
 
 app.set('socketio', io)
 
-let scheduler = new Scheduler(CronJob, io, sequ)
+let scheduler = new Scheduler(CronJob, io, sequ, Devices)
 
 app.set('scheduler', scheduler)
 
@@ -97,7 +101,7 @@ io.on('connection',function(socket) {
 	socket.on('getDevices', () => {
 		sequ.sequelize.query(
 		`SELECT d.state, d.type, i.*, pin.pin1, pin.pin2, pin.pin3, pin.pwm, pin.shift_id FROM \`devices\` d 
-			LEFT JOIN \`inputs\` i ON(d.input_id = i.id)
+			LEFT JOIN \`inputs\` i ON(d.input_id = i.number)
 	    	LEFT JOIN \`pin_settings\` pin ON(i.pin_settings_id = pin.id);`,
 	    { type: sequ.sequelize.QueryTypes.SELECT})
 		.then(devices => {
