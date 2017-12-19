@@ -115,16 +115,16 @@ router.delete('/:id', (req, res, next) => {
 
 function addSchedule(id, Schedules) {
 	sequ.sequelize.query(
-	`SELECT s.*, pin.id as inputId FROM schedules s
+	`SELECT s.*, pin.id as inputId, d.id as deviceId FROM schedules s
 		LEFT JOIN devices d ON(s.device_id = d.id)
-		LEFT JOIN inputs i ON (d.input_id = i.id)
+		LEFT JOIN inputs i ON (d.input_id = i.number)
 		LEFT JOIN pin_settings pin on(i.pin_settings_id = pin.id)
 		WHERE s.active = true AND s.id = ${id};`,
     { type: sequ.sequelize.QueryTypes.SELECT})
 	.then(schedule => {
 		cron = schedule[0]
 		if(cron)
-			Schedules.addJob(cron.id, cron.cron,cron.inputId , cron.state, cron.transiton_time)
+			Schedules.addJob(cron.id, cron.deviceId, cron.cron,cron.inputId , cron.state, cron.transiton_time)
 	})
 	.catch(e => {
 		console.log(e)

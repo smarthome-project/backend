@@ -1,23 +1,24 @@
 class Scheduler {
 
-	constructor(CronJob, socket, sequ) {
+	constructor(CronJob, socket, sequ, Devices) {
 		this.CronJob = CronJob
 		this.socket = socket
 		this.sequ = sequ
+		this.Devices = Devices
 		this.jobs = []
 	}
 
 	getJobsFromDb() {
 		this.sequ.sequelize.query(
-		`SELECT s.*, pin.id as inputId FROM schedules s
+		`SELECT s.*, pin.id as inputId, d.id as deviceId FROM schedules s
 			LEFT JOIN devices d ON(s.device_id = d.id)
-			LEFT JOIN inputs i ON (d.input_id = i.id)
+			LEFT JOIN inputs i ON (d.input_id = i.number)
 			LEFT JOIN pin_settings pin on(i.pin_settings_id = pin.id)
 			WHERE s.active = true;`,
 	    { type: this.sequ.sequelize.QueryTypes.SELECT})
 		.then(schedules => {
 			schedules.forEach( (cron) => {
-				this.addJob(cron.id, cron.cron,cron.inputId , cron.state, cron.transiton_time)
+				this.addJob(cron.id, cron.deviceId, cron.cron,cron.inputId , cron.state, cron.transiton_time)
 			})
 		})
 		.catch(e => {
@@ -25,13 +26,31 @@ class Scheduler {
 		})
 	}
 
-	addJob(id, pattern,inputId, state, transitTime = null) {
+	updateDeviceState(id, state, inputId,transitTime = null) {
+		this.Devices.findById(id)
+			.then(device => {
+				if (device) {
+					device.update({state:state})
+					.then((s) => {
+						this.socket.to('controler').emit('changeState',{id:inputId, state:state, transitTime: transitTime})
+					})
+					.catch(e => {
+						console.log(e)
+					})
+				}
+			})
+			.catch(e => {
+				console.log(e)
+			})
+	}
+
+	addJob(id, deviceId, pattern, inputId, state, transitTime = null) {
 		try {
 			var job = new this.CronJob({
 				cronTime: pattern,
 				onTick: () => {
 					console.log(` ${id}_${pattern} _tick  ${new Date()}`)
-					this.socket.to('controler').emit('changeState',{id:inputId, state:state, transitTime: transitTime})
+					this.updateDeviceState(id, state, inputId, transitTime)
 				},
 				start: true
 			})
@@ -41,7 +60,6 @@ class Scheduler {
 		}
 
 		this.jobs[id] = job
-		//console.log(this.jobs[id])
 	}
 
 	removeJob(id) {
