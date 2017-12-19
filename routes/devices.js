@@ -70,14 +70,14 @@ router.put('/:id', (req, res, next) => {
 			if (device) {
 				device.update(data)
 				.then((s) => {
-					console.log(s)
 					if(req.body.time)
 						device.state.time = req.body.time
 					req.app.get('socketio').to('controler').emit('changeState',{id:device.input_id, state:device.state})
-					req.app.get('socketio').to('user').emit('changeState', {id:device.id, state: devices.state})
+					req.app.get('socketio').to('user').emit('changeState', {id:device.id, state: device.state})
 					res.status(200).json(device)
 				})
 				.catch(e => {
+					console.log(e)
 					res.status(400).json(e.errors)
 				})
 			} else {
