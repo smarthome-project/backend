@@ -9,6 +9,7 @@ const CronJob      = require('cron').CronJob
 const config = require('./config')
 const checkDB 	= require('./libs/updateDB.js')
 
+const cors = require('cors')
 
 const tokensRouter = require('./routes/tokens')
 const devicesRouter = require('./routes/devices')
@@ -36,6 +37,8 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 
 app.use(morgan('dev'))
+
+app.use(cors())
 
 app.use(function(req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*")
