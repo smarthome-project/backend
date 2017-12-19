@@ -65,25 +65,29 @@ router.post('/', (req, res, next) => {
 router.put('/:id', (req, res, next) => {
 	const id = req.params.id
 	let data = req.body
-	Users.findById(id)
-		.then(user => {
-			if (user) {
-				user.update(data)
-				.then((s) => {
-					console.log(s)
-					res.status(200).json(user)
-				})
-				.catch(e => {
-					res.status(400).json(e.errors)
-				})
-			} else {
-				res.status(400).end()
-			}
-		})
-		.catch(e => {
-			console.log(e)
-			res.status(500).json(e)
-		})
+	if (id == req.decoded.id) {
+		Users.findById(id)
+			.then(user => {
+				if (user) {
+					user.update(data)
+					.then((s) => {
+						console.log(s)
+						res.status(200).json(user)
+					})
+					.catch(e => {
+						res.status(400).json(e.errors)
+					})
+				} else {
+					res.status(400).end()
+				}
+			})
+			.catch(e => {
+				console.log(e)
+				res.status(500).json(e)
+			})	
+	} else {
+		res.status(401).end()
+	}
 })
 
 

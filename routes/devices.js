@@ -48,6 +48,7 @@ router.post('/', (req, res, next) => {
 	Devices.create(data)
 		.then(device => {
 			initDevice(device.input_id, req.app.get('socketio'))
+			req.app.get('socketio').to('user').emit('newDevice'. device)
 			res.status(201).json(device)
 		})
 		.catch(e => {
@@ -70,7 +71,10 @@ router.put('/:id', (req, res, next) => {
 				device.update(data)
 				.then((s) => {
 					console.log(s)
+					if(req.body.time)
+						device.state.time = req.body.time
 					req.app.get('socketio').to('controler').emit('changeState',{id:device.input_id, state:device.state})
+					req.app.get('socketio').to('user').emit('changeState'. {id:device.id, state: devices.state})
 					res.status(200).json(device)
 				})
 				.catch(e => {
@@ -110,6 +114,7 @@ router.delete('/:id', (req, res, next) => {
 		})
 		.then( (aff) => {
 			req.app.get('socketio').to('controler').emit('removeDevice', input_id)
+			req.app.get('socketio').to('user').emit('removeDevice'. id)
 			res.status(204).end()
 		})
 		.catch(e => {

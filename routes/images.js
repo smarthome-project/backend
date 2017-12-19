@@ -86,8 +86,6 @@ router.put('/:id', (req, res, next) => {
  =            DELETEs         =
  ============================*/
 
- //TO DO DELETE ALL DEVICES AND CRONES FROM THAT ROOM 
-
 router.delete('/:id', (req, res, next) => {
 	const id  = req.params.id
 	Images.findById(id)

@@ -137,12 +137,5 @@ function removeSchedule(id, Schedules) {
 	Schedules.removeJob(id)
 }
 
-	
-}
-
-function removeSchedule(id, Schedules) {
-	Schedules.removeJob(id)
-}
-
 
 module.exports = router

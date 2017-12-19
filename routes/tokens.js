@@ -49,8 +49,6 @@ router.post('/', (req, res, next) => {
 			console.log("error", e)
 			res.status(500).json(e)
 		})
-
-	
 })
 
  /*============================

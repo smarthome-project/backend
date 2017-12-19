@@ -32,7 +32,7 @@ class Scheduler {
 				if (device) {
 					device.update({state:state})
 					.then((s) => {
-						this.socket.to('controler').emit('changeState',{id:inputId, state:state, transitTime: transitTime})
+						this.socket.to('controler').emit('changeState',{id:inputId, state:state, time: transitTime})
 					})
 					.catch(e => {
 						console.log(e)
