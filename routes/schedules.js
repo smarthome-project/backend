@@ -4,13 +4,14 @@ const _ 		   = require('lodash')
 
 const sequ = require('../libs/sequelizeDB.js')
 const Schedules = require('../models/schedules.js')(sequ.sequelize ,sequ.Sequelize)
+const ViewSchedules = require('../models/vSchedules.js')(sequ.sequelize ,sequ.Sequelize)
 
 /*===========================
 =            GETs           =
 ===========================*/
 
 router.get('/', (req, res, next) => {
-	Schedules.findAll()
+	ViewSchedules.findAll()
 		.then(schedules => {
 			res.status(200).json(schedules)
 		})
@@ -22,10 +23,9 @@ router.get('/', (req, res, next) => {
 
 router.get('/:id', (req, res, next) => {
 	const id = req.params.id
-	Schedules.findById(id)
+	ViewSchedules.findById(id)
 		.then(schedule => {
 			if (schedule) {
-				//req.app.get('socketio').to('controler').emit('changeState',{id:device.input_id, state:device.state})
 				res.status(200).json(schedule)
 			} else {
 				res.status(400).end()
@@ -98,7 +98,6 @@ router.delete('/:id', (req, res, next) => {
 			}
 		})
 		.then( () => {
-			console.log("before call id_ ", id)
 			removeSchedule(id, req.app.get('scheduler'))
 			res.status(204).end()
 		})
