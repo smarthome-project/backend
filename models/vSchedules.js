@@ -26,7 +26,7 @@ module.exports = (sequelize, Sequelize) => {
 			type: Sequelize.BOOLEAN,
 			defaultValue: true 
 		},
-		name: {
+		device_name: {
 			type: Sequelize.STRING(60),
 		},
 		room_name: {
