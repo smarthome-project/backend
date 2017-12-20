@@ -1,4 +1,4 @@
-module.exports = (sequelize, Sequelize) => {
+module.exports = (sequelize, Sequelize, CronJob) => {
 
 	const Schedules = sequelize.define('schedules', {
 		room_id: {
@@ -27,6 +27,25 @@ module.exports = (sequelize, Sequelize) => {
 			defaultValue: true 
 		}
 	}, {
+		validate: {
+			checkCrone() {
+				if (this.cron) {
+					let job = undefined
+					try {
+						job = new CronJob(this.cron, function() {
+							console.log('cron pattern test')
+						})
+						job.stop()
+						jobs = undefined
+					} catch(ex) {
+						throw new Error('Bad cron pattern')
+						console.log("cron pattern not valid")
+					}
+				} else {
+					throw new Error('Bad cron pattern')
+				}
+			}
+		}
 	})
 
   return Schedules

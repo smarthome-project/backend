@@ -1,9 +1,10 @@
 const express      = require('express')
 const router 	   = express.Router()
 const _ 		   = require('lodash')
+const CronJob      = require('cron').CronJob
 
 const sequ = require('../libs/sequelizeDB.js')
-const Schedules = require('../models/schedules.js')(sequ.sequelize ,sequ.Sequelize)
+const Schedules = require('../models/schedules.js')(sequ.sequelize ,sequ.Sequelize, CronJob)
 const ViewSchedules = require('../models/vSchedules.js')(sequ.sequelize ,sequ.Sequelize)
 
 /*===========================
