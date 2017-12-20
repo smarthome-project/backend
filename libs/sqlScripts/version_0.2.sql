@@ -18,5 +18,6 @@ CREATE TABLE IF NOT EXISTS `devices_types` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO info(version) VALUES('0.2');
+
+UPDATE `info` SET `version` = '0.2';
 

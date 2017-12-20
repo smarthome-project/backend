@@ -8,4 +8,4 @@ CREATE TABLE IF NOT EXISTS `images` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO info(version) VALUES('0.3');
+UPDATE `info` SET `version` = '0.3';

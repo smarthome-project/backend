@@ -37,8 +37,4 @@ INSERT INTO `devices_types` VALUES (1,'POWER','{\"active\": false}','zasilanie')
 /*!40000 ALTER TABLE `devices_types` ENABLE KEYS */;
 UNLOCK TABLES;
 
-
-
-
-
-INSERT INTO info(version) VALUES('0.4');
+UPDATE `info` SET `version` = '0.4';
