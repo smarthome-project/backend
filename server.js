@@ -41,7 +41,7 @@ var io      = require('socket.io').listen(server);
 let alarmStatus = false
 
 const superSecret = config.secret + dbSecret
-console.log(superSecret)
+
 app.set('superSecret', superSecret)
 
 app.use(bodyParser.json())
