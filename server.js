@@ -1,3 +1,10 @@
+const dbSecret = module.parent.dbSecret
+
+if (!dbSecret) {
+	throw new Error("NO dbSecret FOUND!, please reset device")
+	process.exit(1)
+}
+
 const express 	   = require('express')
 const path 		   = require('path')
 const bodyParser   = require('body-parser')
@@ -21,12 +28,10 @@ const imagesRouter = require('./routes/images')
 const pinSettingsRouter = require('./routes/pinSettings')
 const schedulesRouter = require('./routes/schedules')
 
-
 const sequ = require('./libs/sequelizeDB.js')
 const Scheduler = require('./libs/Scheduler.js')
 
 const Devices = require('./models/devices.js')(sequ.sequelize ,sequ.Sequelize)
-
 
 //var route = require('./routes/route')
 var app = express()
@@ -35,7 +40,9 @@ var server  = require('http').createServer(app);
 var io      = require('socket.io').listen(server);
 let alarmStatus = false
 
-app.set('superSecret', config.secret)
+const superSecret = config.secret + dbSecret
+console.log(superSecret)
+app.set('superSecret', superSecret)
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
@@ -140,9 +147,7 @@ app.get('*', function(req, res) {
 
 server.listen(config.port, function() {
 	console.log('Server started on ',config.port)
-	checkDB.updateDB( () => {
-		scheduler.getJobsFromDb()	
-	})
+	scheduler.getJobsFromDb()	
 })
 
 

@@ -29,6 +29,18 @@ router.get('/checkToken', (req, res, next) => {
 	}
 })
 
+router.get('/available', (req, res, next) => {
+	Users.findOne({
+		attributes: [[sequ.sequelize.fn('COUNT', sequ.sequelize.col('id')), 'ids']]
+	})
+	.then(user => {
+		if (user.get('ids') > 0) 
+			res.status(200).json({setUp: false})
+		else
+			res.status(200).json({setUp: true})
+	})
+})
+
  /*=============================
  =            POSTs            =
  =============================*/

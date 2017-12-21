@@ -133,9 +133,9 @@ function initDevice(input_id, io) {
 	sequ.sequelize.query(
 	`SELECT d.state, d.type, i.*, pin.pin1, pin.pin2, pin.pin3, pin.pwm, pin.shift_id FROM \`devices\` d 
 		LEFT JOIN \`inputs\` i ON(d.input_id = i.number)
-    	LEFT JOIN \`pin_settings\` pin ON(i.pin_settings_id = pin.id)
-    	WHERE d.input_id = ${input_id};`,
-    { type: sequ.sequelize.QueryTypes.SELECT})
+		LEFT JOIN \`pin_settings\` pin ON(i.pin_settings_id = pin.id)
+		WHERE d.input_id = ${input_id};`,
+	{ type: sequ.sequelize.QueryTypes.SELECT})
 	.then(device => {
 		console.log(device)
 		io.to('controler').emit("initDevice", device)

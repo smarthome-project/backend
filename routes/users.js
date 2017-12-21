@@ -44,17 +44,25 @@ router.get('/:id', (req, res, next) => {
  =============================*/
 
 router.post('/', (req, res, next) => {
-	let data = req.body
-	console.log(data)
-	Users.create(data)
-		.then(user => {
-			delete user.dataValues.pass
-			res.status(201).json(user)
-		})
-		.catch(e => {
-			console.log(e)
-			res.status(400).json(e.errors)
-		})
+	Users.findOne({
+		attributes: [[sequ.sequelize.fn('COUNT', sequ.sequelize.col('id')), 'ids']]
+	})
+	.then(user => {
+		if (user.get('ids') == 0) {
+			let data = req.body
+			Users.create(data)
+				.then(user => {
+					delete user.dataValues.pass
+					res.status(201).json(user)
+				})
+				.catch(e => {
+					console.log(e)
+					res.status(400).json(e.errors)
+				})
+		} else {
+			res.status(400).json({err: "can't create more than one user"})
+		}
+	})
 })
 
  /*============================
