@@ -120,6 +120,23 @@ io.on('connection',function(socket) {
 			io.to('controler').emit("allDevicesData", devicesByInputID)
 		})
 	})
+
+	socket.on('getRegister', () => {
+		sequ.sequelize.query(
+		`SELECT d.state, d.type, i.*, pin.pin1, pin.pin2, pin.pin3, pin.pwm, pin.shift_id FROM \`devices\` d 
+			LEFT JOIN \`inputs\` i ON(d.input_id = i.number)
+	    	LEFT JOIN \`pin_settings\` pin ON(i.pin_settings_id = pin.id)
+	    	WHERE d.type = 'POWER';`,
+	    { type: sequ.sequelize.QueryTypes.SELECT})
+		.then(devices => {
+			let registerState = [0,0,0,0,0,0,0,0]
+			devices.forEach( (device) => {
+				if(device.state && device.state.active == true)
+					registerState[device.shift_id] = 1
+			})
+			io.to('controler').emit("initRegister", registerState.toString())
+		})
+	})
 })
 
 app.use(function(req, res, next) {
