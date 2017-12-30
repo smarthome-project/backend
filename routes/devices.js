@@ -74,7 +74,8 @@ router.put('/:id', (req, res, next) => {
 				.then((s) => {
 					if(req.body.time)
 						device.state.time = req.body.time
-					req.app.get('socketio').to('controler').emit('changeState',{id:device.input_id, state:device.state})
+
+					changeState(device.id,req.app.get('socketio'))
 					req.app.get('socketio').to('user').emit('changeState', {id:device.id, state: device.state})
 					res.status(200).json(device)
 				})
@@ -139,6 +140,18 @@ function initDevice(input_id, io) {
 	.then(device => {
 		console.log(device)
 		io.to('controler').emit("initDevice", device)
+	})
+}
+
+function changeState(id, io) {
+	sequ.sequelize.query(
+	`SELECT d.state, d.type, i.* FROM \`devices\` d 
+		LEFT JOIN \`inputs\` i ON(d.input_id = i.number)
+		WHERE d.id = ${id};`,
+	{ type: sequ.sequelize.QueryTypes.SELECT})
+	.then(device => {
+		console.log(device)
+		io.to('controler').emit('changeState',{id:device[0].pin_settings_id, state:device[0].state})
 	})
 }
 
