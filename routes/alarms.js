@@ -43,6 +43,8 @@ router.put('/:id', (req, res, next) => {
 			if (alarm) {
 				alarm.update(data)
 				.then((s) => {
+					if(data && "secured" in data && alarm)
+						req.app.get('socketio').to('controler').emit("setSecured", alarm.secured)
 					res.status(200).json(alarm)
 				})
 				.catch(e => {

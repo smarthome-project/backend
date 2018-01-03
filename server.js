@@ -34,6 +34,7 @@ const sequ = require('./libs/sequelizeDB.js')
 const Scheduler = require('./libs/Scheduler.js')
 
 const Devices = require('./models/devices.js')(sequ.sequelize ,sequ.Sequelize)
+const Alarms = require('./models/alarms.js')(sequ.sequelize ,sequ.Sequelize)
 
 //var route = require('./routes/route')
 
@@ -101,6 +102,17 @@ io.on('connection',function(socket) {
 
 	socket.on('noPort', (data) => {
 		console.log(data)
+	})
+
+	socket.on('getSecured', ()=> {
+		Alarms.findById(1)
+			.then(alarm => {
+				if (alarm)
+					io.emit("setSecured",alarm.secured)
+			})
+			.catch(e => {
+				res.status(500).json(e)
+			})
 	})
 
 	socket.on('alarm', () => {
