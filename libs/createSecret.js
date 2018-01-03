@@ -13,7 +13,7 @@ const checkMac = function () {
 	const interfaces = os.networkInterfaces() //+ new Date.now()
 	for (var key in interfaces ) {
 		for (var nextKey in key) {
-			if (interfaces[key][nextKey].mac != '00:00:00:00:00:00') {
+			if (interfaces && interfaces[key] && interfaces[key][nextKey] && interfaces[key][nextKey].mac != '00:00:00:00:00:00') {
 				mackNr = interfaces[key][nextKey].mac
 				break
 			}
