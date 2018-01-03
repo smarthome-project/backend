@@ -27,6 +27,7 @@ const inputsRouter = require('./routes/inputs')
 const imagesRouter = require('./routes/images')
 const pinSettingsRouter = require('./routes/pinSettings')
 const schedulesRouter = require('./routes/schedules')
+const camerasRouter = require('./routes/cameras')
 
 const sequ = require('./libs/sequelizeDB.js')
 const Scheduler = require('./libs/Scheduler.js')
@@ -62,6 +63,7 @@ app.use(function(req, res, next) {
 })
 
 app.use("/api/tokens", tokensRouter)
+app.use("/api/cameras", camerasRouter)
 app.use("/api/users", usersRouter)
 app.use("/api/rooms", roomsRouter)
 app.use("/api/pinSettings", pinSettingsRouter)
