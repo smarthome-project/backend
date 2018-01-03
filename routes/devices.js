@@ -76,7 +76,7 @@ router.put('/:id', (req, res, next) => {
 						device.state.time = req.body.time
 
 					changeState(device.id,req.app.get('socketio'))
-					req.app.get('socketio').to('user').emit('changeState', {id:device.id, state: device.state})
+					req.app.get('socketio').to('user').emit('changeState', {id:device.input_id, state: device.state})
 					res.status(200).json(device)
 				})
 				.catch(e => {
@@ -139,7 +139,7 @@ function initDevice(input_id, io) {
 	{ type: sequ.sequelize.QueryTypes.SELECT})
 	.then(device => {
 		console.log(device)
-		io.to('controler').emit("initDevice", device)
+		io.to('controler').emit("initDevice", device[0])
 	})
 }
 

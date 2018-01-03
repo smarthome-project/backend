@@ -31,12 +31,16 @@ var updateDB = function(rdy) {
 					updateToVersion('version_0.5.sql', (err, resp) => {
 						if(!err) updateDB(rdy)
 					})
-				}   else if(resp == '0.5') {
+				}  else if(resp == '0.5') {
 					updateToVersion('version_0.6.sql', (err, resp) => {
 						if(!err) updateDB(rdy)
 					})
-				}   else if(resp == '0.6') {
+				}  else if(resp == '0.6') {
 					updateToVersion('version_0.7.sql', (err, resp) => {
+						if(!err) updateDB(rdy)
+					})
+				}  else if(resp == '0.7') {
+					updateToVersion('version_0.8.sql', (err, resp) => {
 						if(!err) updateDB(rdy)
 					})
 				} else {

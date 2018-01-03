@@ -28,6 +28,7 @@ const imagesRouter = require('./routes/images')
 const pinSettingsRouter = require('./routes/pinSettings')
 const schedulesRouter = require('./routes/schedules')
 const camerasRouter = require('./routes/cameras')
+const alarmsRouter = require('./routes/alarms')
 
 const sequ = require('./libs/sequelizeDB.js')
 const Scheduler = require('./libs/Scheduler.js')
@@ -35,6 +36,7 @@ const Scheduler = require('./libs/Scheduler.js')
 const Devices = require('./models/devices.js')(sequ.sequelize ,sequ.Sequelize)
 
 //var route = require('./routes/route')
+
 var app = express()
 
 var server  = require('http').createServer(app);
@@ -72,19 +74,13 @@ app.use("/api/devicesTypes", devicesTypesRouter)
 app.use("/api/inputs", inputsRouter)
 app.use("/api/images", imagesRouter)
 app.use("/api/schedules", schedulesRouter)
+app.use("/api/alarms", alarmsRouter)
 
 /*=======================================
 =            Code For alarm (mock)            =
 =======================================*/
 
-app.get("/api/alarm", (req, res) => {
-	res.status(200).json({alarmStatus: alarmStatus})
-})
 
-app.get("/api/alarm/:state", (req, res) => {
-	alarmStatus = (req.params.state == "true") ? true : false
-	res.status(200).json({alarmStatus: alarmStatus})
-})
 /*=====  End of Code For alarm (mock)  ======*/
 
 app.set('socketio', io)
@@ -105,6 +101,14 @@ io.on('connection',function(socket) {
 
 	socket.on('noPort', (data) => {
 		console.log(data)
+	})
+
+	socket.on('alarm', () => {
+		io.to('user').emit("alarm")
+		sequ.sequelize.query(
+		`UPDATE \`alarms\` SET \`alarm\`='1' WHERE \`id\`='1';`,
+	    { type: sequ.sequelize.QueryTypes.UPDATE})
+		.then(aff => {})
 	})
 
 	socket.on('getDevices', () => {
