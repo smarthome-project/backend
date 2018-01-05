@@ -10,7 +10,11 @@ module.exports = (sequelize, Sequelize) => {
 			}
 		},
 		image_path: {
-			type: Sequelize.STRING(100)
+			type: Sequelize.STRING(100),
+			allowNull: false,
+			validate: {
+				len: [3,100]
+			}
 		}
 	}, {
 		timestamps: false

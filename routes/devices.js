@@ -65,7 +65,6 @@ router.post('/', (req, res, next) => {
 router.put('/:id', (req, res, next) => {
 	const id = req.params.id
 	let data = req.body
-	delete data.input_id
 	delete data.type
 	Devices.findById(id)
 		.then(device => {

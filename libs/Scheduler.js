@@ -17,16 +17,23 @@ class Scheduler {
 			WHERE s.active = true;`,
 	    { type: this.sequ.sequelize.QueryTypes.SELECT})
 		.then(schedules => {
-			schedules.forEach( (cron) => {
-				this.addJob(cron.id, cron.deviceId, cron.cron,cron.inputId , cron.state, cron.transiton_time)
-			})
+			let jobsCounter = {}
+			for (let i = 0; i < schedules.length; i++) {
+				const cron = schedules[i]
+				jobsCounter[cron.deviceId] = jobsCounter[cron.deviceId]? jobsCounter[cron.deviceId] + 1 : 0
+
+				const delay = jobsCounter[cron.deviceId] * 3000
+
+				this.addJob(cron.id, cron.deviceId, cron.cron,cron.inputId , cron.state, delay, cron.transiton_time)
+			}
+
 		})
 		.catch(e => {
 			throw new Error(`error while obtaining schedules form DB`)
 		})
 	}
 
-	updateDeviceState(id, state, inputId,transitTime = null) {
+	updateDeviceState(id, state, inputId, transitTime = null) {
 		this.Devices.findById(id)
 			.then(device => {
 				if (device) {
@@ -44,13 +51,17 @@ class Scheduler {
 			})
 	}
 
-	addJob(id, deviceId, pattern, inputId, state, transitTime = null) {
+	addJob(id, deviceId, pattern, inputId, state, delay, transitTime = null) {
 		try {
+			transitTime = transitTime? transitTime:500
 			var job = new this.CronJob({
 				cronTime: pattern,
 				onTick: () => {
-					console.log(` ${id}_${pattern} _tick  ${new Date()}`)
-					this.updateDeviceState(id, state, inputId, transitTime)
+					console.log(` ${deviceId}_${pattern} _tick  ${new Date()}`)
+					let that = this
+					setTimeout(function() {
+						that.updateDeviceState(deviceId, state, inputId, transitTime)
+					},delay)	
 				},
 				start: true
 			})

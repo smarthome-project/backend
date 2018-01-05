@@ -36,6 +36,7 @@ module.exports = (sequelize, Sequelize) => {
 		input_id: {
 			type: Sequelize.INTEGER,
 			allowNull: false,
+			unique: true,
 		},
 		room_id: {
 			type: Sequelize.INTEGER
@@ -48,7 +49,7 @@ module.exports = (sequelize, Sequelize) => {
 			allowNull: false,
 		},
 		img: {
-			type: Sequelize.STRING(60),
+			type: Sequelize.STRING(60)
 		}
 	}, {
 		timestamps: false,
