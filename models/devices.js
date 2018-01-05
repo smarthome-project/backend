@@ -47,6 +47,9 @@ module.exports = (sequelize, Sequelize) => {
 		name: {
 			type: Sequelize.STRING(60),
 			allowNull: false,
+			validate: {
+				len: [3,60]
+			}
 		},
 		img: {
 			type: Sequelize.STRING(60)
