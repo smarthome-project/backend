@@ -46,6 +46,7 @@ router.post('/', (req, res, next) => {
 	Schedules.create(data)
 		.then(schedule => {
 			addSchedule(schedule.id, req.app.get('scheduler'))
+			req.app.get('socketio').to('user').emit('schedul:post', schedule)
 			res.status(201).json(schedule)
 			req.app.get('scheduler').addJob(cron.id, cron.cron,cron.inputId , cron.state, cron.transiton_time)
 		})
@@ -69,6 +70,7 @@ router.put('/:id', (req, res, next) => {
 				.then((s) => {
 					removeSchedule(id, req.app.get('scheduler'))
 					addSchedule(id, req.app.get('scheduler'))
+					req.app.get('socketio').to('user').emit('schedul:put', schedule)
 					res.status(200).json(schedule)
 				})
 				.catch(e => {
@@ -100,6 +102,7 @@ router.delete('/:id', (req, res, next) => {
 		})
 		.then( () => {
 			removeSchedule(id, req.app.get('scheduler'))
+			req.app.get('socketio').to('user').emit('schedul:delete', id)
 			res.status(204).end()
 		})
 		.catch(e => {

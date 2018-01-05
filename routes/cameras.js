@@ -43,7 +43,7 @@ router.post('/', (req, res, next) => {
 	let data = req.body
 	Cameras.create(data)
 		.then(camera => {
-			req.app.get('socketio').to('user').emit('cameras:post', camera)
+			req.app.get('socketio').to('user').emit('camera:post', camera)
 			res.status(201).json(camera)
 		})
 		.catch(e => {
@@ -65,7 +65,7 @@ router.put('/:id', (req, res, next) => {
 			if (camera) {
 				camera.update(data)
 				.then((s) => {
-					req.app.get('socketio').to('user').emit('cameras:put', camera)
+					req.app.get('socketio').to('user').emit('camera:put', camera)
 					res.status(200).json(camera)
 				})
 				.catch(e => {
@@ -96,7 +96,7 @@ router.delete('/:id', (req, res, next) => {
 			return camera.destroy()
 		})
 		.then( (aff) => {
-			req.app.get('socketio').to('user').emit('cameras:delete', id)
+			req.app.get('socketio').to('user').emit('camera:delete', id)
 			res.status(204).end()
 		})
 		.catch(e => {

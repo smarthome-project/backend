@@ -92,7 +92,6 @@ app.set('scheduler', scheduler)
 
 io.on('connection',function(socket) {
 	console.log("connection")
-	console.log(socket.handshake.query.Type)
 
 	if (socket.handshake.query.Type && socket.handshake.query.Type == 'controler') {
 		socket.join('controler')
