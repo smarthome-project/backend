@@ -47,6 +47,7 @@ router.post('/', (req, res, next) => {
 	Rooms.create(data)
 		.then(room => {
 			delete room.dataValues.pass
+			req.app.get('socketio').to('user').emit('room:post', room)
 			res.status(201).json(room)
 		})
 		.catch(e => {
@@ -69,6 +70,7 @@ router.put('/:id', (req, res, next) => {
 				room.update(data)
 				.then((s) => {
 					console.log(s)
+					req.app.get('socketio').to('user').emit('room:put', room)
 					res.status(200).json(room)
 				})
 				.catch(e => {
@@ -114,6 +116,7 @@ router.delete('/:id', (req, res, next) => {
 			})
 		})
 		.then( (aff) => {
+			req.app.get('socketio').to('user').emit('room:delete', id)
 			res.status(204).end()
 		})
 		.catch(e => {
