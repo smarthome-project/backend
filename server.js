@@ -65,18 +65,6 @@ app.use(function(req, res, next) {
 	}
 })
 
-app.use("/api/tokens", tokensRouter)
-app.use("/api/cameras", camerasRouter)
-app.use("/api/users", usersRouter)
-app.use("/api/rooms", roomsRouter)
-app.use("/api/pinSettings", pinSettingsRouter)
-app.use("/api/devices", devicesRouter)
-app.use("/api/devicesTypes", devicesTypesRouter)
-app.use("/api/inputs", inputsRouter)
-app.use("/api/images", imagesRouter)
-app.use("/api/schedules", schedulesRouter)
-app.use("/api/alarms", alarmsRouter)
-
 /*=======================================
 =            Code For alarm (mock)            =
 =======================================*/
@@ -156,6 +144,10 @@ io.on('connection',function(socket) {
 	})
 })
 
+
+
+app.use("/api/tokens", tokensRouter)
+
 app.use(function(req, res, next) {
 	var token = req.body.token || req.query.token || req.headers['x-access-token']
 	if (token) {
@@ -174,6 +166,17 @@ app.use(function(req, res, next) {
 		})
 	}
 })
+
+app.use("/api/alarms", alarmsRouter)
+app.use("/api/cameras", camerasRouter)
+app.use("/api/users", usersRouter)
+app.use("/api/rooms", roomsRouter)
+app.use("/api/pinSettings", pinSettingsRouter)
+app.use("/api/devices", devicesRouter)
+app.use("/api/devicesTypes", devicesTypesRouter)
+app.use("/api/inputs", inputsRouter)
+app.use("/api/images", imagesRouter)
+app.use("/api/schedules", schedulesRouter)
 
 app.get('*', function(req, res) {
 	res.send('server')

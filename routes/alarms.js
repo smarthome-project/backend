@@ -2,8 +2,9 @@ const express      = require('express')
 const router 	   = express.Router()
 const _ 		   = require('lodash')
 
-const sequ = require('../libs/sequelizeDB.js')
+const sequ   = require('../libs/sequelizeDB.js')
 const Alarms = require('../models/alarms.js')(sequ.sequelize ,sequ.Sequelize)
+const Users  = require('../models/users.js')(sequ.sequelize ,sequ.Sequelize)
 
 /*===========================
 =            GETs           =
@@ -41,15 +42,31 @@ router.put('/:id', (req, res, next) => {
 	Alarms.findById(id)
 		.then(alarm => {
 			if (alarm) {
-				alarm.update(data)
-				.then((s) => {
-					if(data && "secured" in data && alarm)
-						req.app.get('socketio').to('controler').emit("setSecured", alarm.secured)
-					res.status(200).json(alarm)
-				})
-				.catch(e => {
-					res.status(400).json(e.errors)
-				})
+				if (data.secured == false) {
+					if (req.decoded.pin == req.body.pin) {
+						alarm.update(data)
+						.then((s) => {
+							if(data && "secured" in data && alarm)
+								req.app.get('socketio').to('controler').emit("setSecured", alarm.secured)
+							res.status(200).json(alarm)
+						})
+						.catch(e => {
+							res.status(400).json(e.errors)
+						})
+					} else {
+						res.status(401).end()
+					}
+				} else {
+					alarm.update(data)
+					.then((s) => {
+						if(data && "secured" in data && alarm)
+							req.app.get('socketio').to('controler').emit("setSecured", alarm.secured)
+						res.status(200).json(alarm)
+					})
+					.catch(e => {
+						res.status(400).json(e.errors)
+					})
+				}
 			} else {
 				res.status(400).end()
 			}

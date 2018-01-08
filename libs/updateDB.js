@@ -47,6 +47,10 @@ var updateDB = function(rdy) {
 					updateToVersion('version_0.9.sql', (err, resp) => {
 						if(!err) updateDB(rdy)
 					})
+				} else if(resp == '0.9') {
+					updateToVersion('version_0.10.sql', (err, resp) => {
+						if(!err) updateDB(rdy)
+					})
 				} else {
 					console.log("DB version = " + resp)
 					rdy()

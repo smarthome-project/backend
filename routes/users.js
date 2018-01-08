@@ -12,7 +12,7 @@ const Users = require('../models/users.js')(sequ.sequelize ,sequ.Sequelize)
 router.get('/', (req, res, next) => {
 	Users.findAll({
 		attributes: {
-			exclude: ['password']
+			exclude: ['pass', 'pin']
 		}
 	})
 		.then(users => {
@@ -25,7 +25,12 @@ router.get('/', (req, res, next) => {
 
 router.get('/:id', (req, res, next) => {
 	const id = req.params.id
-	Users.findById(id)
+	Users.findOne({
+		where: {id: id},
+		attributes: {
+			exclude: ['pass', 'pin']
+		}
+	})
 		.then(user => {
 			if (user) {
 				res.status(200).json(user)

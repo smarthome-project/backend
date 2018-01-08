@@ -2,7 +2,6 @@ const express = require('express')
 const router 	= express.Router()
 const jwt		= require('jsonwebtoken')
 
-const secret 	= require('./../config').secret
 const group_names = ['root','admin','security','renter','observer']
 
 const sequ = require('../libs/sequelizeDB.js')
@@ -17,6 +16,7 @@ const expiresIn = (60 * 60 * 16)
 router.get('/checkToken', (req, res, next) => {
 	let token = req.headers['x-access-token']
 	if (token){
+		const secret = req.app.get('superSecret')
 		jwt.verify(token, secret, (err, decoded) => {
 			if (err){
 				res.status(401).end()
@@ -51,6 +51,7 @@ router.post('/', (req, res, next) => {
 	Users.findOne({ where: {login: login} })
 		.then(user => {		
 			if (user && login == user.login && pass == user.pass) {
+				const secret = req.app.get('superSecret')
 				let token = jwt.sign(user.toJSON(), secret, { expiresIn : expiresIn })
 				res.status(201).json({token: token})
 			} else {

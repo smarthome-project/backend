@@ -21,6 +21,12 @@ module.exports = (sequelize, Sequelize) => {
 		},
 		nazwisko: {
 			type: Sequelize.STRING(30)
+		},
+		pin: {
+			type: Sequelize.STRING(8),
+			validate: {
+				len: [4,8]
+			}
 		}
 	}, {
 		timestamps: false
